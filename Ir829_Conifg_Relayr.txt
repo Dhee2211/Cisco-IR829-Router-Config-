@@ -1,0 +1,205 @@
+
+Current configuration : 3214 bytes
+!
+version 15.6
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname IR829
+!
+boot-start-marker
+boot system flash:ir800-universalk9-mz.SPA.156-2.T
+boot-end-marker
+!
+!
+enable secret 5 $1$qes/$.EQ/xeLvCEDCAmkZbhdMY1
+!
+no aaa new-model
+ethernet lmi ce
+service-module wlan-ap 0 bootimage autonomous
+!
+ignition off-timer 900
+!
+ignition undervoltage threshold 9
+!
+no ignition enable
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+chat-script lte "" "AT!CALL" TIMEOUT 20 "OK"
+!
+!
+license udi pid IR829GW-LTE-NA-AK9 sn FTX1946801H
+license boot module ir800 technology-package securityk9
+!
+!
+username admin secret 5 $1$zBk4$fr1rldNTDtcApGU5tOY.z.
+!
+redundancy
+!
+!
+!
+!
+!
+controller Cellular 0
+ lte sim data-profile 1 attach-profile 1 slot 0
+ lte sim data-profile 1 attach-profile 1 slot 1
+ lte modem link-recovery rssi onset-threshold -110
+ lte modem link-recovery monitor-timer 20
+ lte modem link-recovery wait-timer 10
+ lte modem link-recovery debounce-count 6
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface GigabitEthernet0
+ no ip address
+ shutdown
+!
+interface GigabitEthernet1
+ no ip address
+!
+interface GigabitEthernet2
+ no ip address
+!
+interface GigabitEthernet3
+ no ip address
+!
+interface GigabitEthernet4
+ no ip address
+!
+interface Wlan-GigabitEthernet0
+ no ip address
+!
+interface GigabitEthernet5
+ no ip address
+ shutdown
+ duplex auto
+ speed auto
+!
+interface Cellular0
+ ip address negotiated
+ ip nat outside
+ ip virtual-reassembly in
+ encapsulation slip
+ dialer in-band
+ dialer idle-timeout 0
+ dialer string lte
+ dialer watch-group 1
+ dialer-group 1
+ no peer default ip address
+ async mode interactive
+ routing dynamic
+!
+interface Cellular1
+ no ip address
+ encapsulation slip
+!
+interface wlan-ap0
+ ip unnumbered Vlan1
+!
+interface Vlan1
+ ip address 10.0.0.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+!
+interface Async0
+ no ip address
+ encapsulation scada
+!
+interface Async1
+ no ip address
+ encapsulation scada
+!
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+ip nat inside source list 100 interface Cellular0 overload
+ip route 0.0.0.0 0.0.0.0 Cellular0
+!
+dialer watch-list 1 ip 5.6.7.8 0.0.0.0
+dialer watch-list 1 delay route-check initial 60
+dialer watch-list 1 delay connect 1
+dialer-list 1 protocol ip permit
+!
+!
+access-list 100 permit ip 10.0.0.0 0.0.0.255 any
+!
+control-plane
+!
+!
+!
+!
+line con 0
+ stopbits 1
+line 1
+ stopbits 1
+line 2
+ script dialer lte
+ stopbits 1
+line 3
+ script dialer lte
+ no exec
+ transport preferred lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ rxspeed 100000000
+ txspeed 50000000
+line 4
+ no activation-character
+ no exec
+ transport preferred none
+ transport input all
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+line 8
+ no exec
+ transport preferred lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh
+ rxspeed 100000000
+ txspeed 50000000
+line 1/3 1/6
+ transport preferred none
+ transport output none
+ stopbits 1
+line vty 0 4
+ login
+ transport input none
+!
+no scheduler max-task-time
+!
+!
+!
+!
+end
+
