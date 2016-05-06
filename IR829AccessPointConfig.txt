@@ -1,0 +1,114 @@
+
+Current configuration : 2103 bytes
+!
+version 15.3
+no service pad
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname ap
+!
+!
+logging rate-limit console 9
+enable secret 5 $1$tqAo$PnjeqVYCkTmaFlIdy8Fsk0
+!
+no aaa new-model
+no ip source-route
+no ip cef
+ip dhcp excluded-address 10.0.0.1 10.0.0.5
+!
+ip dhcp pool cisco1
+ import all
+ network 10.0.0.0 255.255.255.0
+ dns-server 8.8.8.8 8.8.4.4
+ default-router 10.0.0.1
+!
+!
+!
+!
+dot11 syslog
+!
+dot11 ssid CPwE_RELAYR
+   authentication open
+   authentication key-management wpa version 2
+   guest-mode
+   mbssid guest-mode
+   wpa-psk ascii 7 121A0C0411045D5679
+!
+!
+!
+no ipv6 cef
+!
+!
+username Cisco password 7 047802150C2E
+username admin secret 5 $1$sYOJ$GUglj7BQ3R2XWS5HXfI9f0
+!
+!
+bridge irb
+!
+!
+!
+interface Dot11Radio0
+ no ip address
+ !
+ encryption mode ciphers aes-ccm tkip
+ !
+ ssid CPwE_RELAYR
+ !
+ antenna gain 0
+ packet retries 64 drop-packet
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+!
+interface Dot11Radio1
+ no ip address
+ shutdown
+ antenna gain 0
+ peakdetect
+ no dfs band block
+ packet retries 64 drop-packet
+ channel dfs
+ station-role root
+ bridge-group 1
+ bridge-group 1 subscriber-loop-control
+ bridge-group 1 spanning-disabled
+ bridge-group 1 block-unknown-source
+ no bridge-group 1 source-learning
+ no bridge-group 1 unicast-flooding
+!
+interface GigabitEthernet0
+ description the embedded AP GigabitEthernet 0 is an internal interface connecting AP with the host router
+ no ip address
+ bridge-group 1
+ bridge-group 1 spanning-disabled
+ no bridge-group 1 source-learning
+!
+interface BVI1
+ mac-address 74a2.e65d.86b6
+ ip address 10.0.0.2 255.255.255.0
+ ipv6 address dhcp
+ ipv6 address autoconfig
+ ipv6 enable
+!
+ip forward-protocol nd
+ip http server
+no ip http secure-server
+ip http help-path http://www.cisco.com/warp/public/779/smbiz/prodconfig/help/eag
+!
+!
+bridge 1 route ip
+!
+!
+!
+line con 0
+line vty 0 4
+ login local
+ transport input all
+!
+end
