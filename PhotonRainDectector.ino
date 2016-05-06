@@ -13,8 +13,9 @@
 //What type of temp/hum sensor are we using?
 #define DHTTYPE DHT11		// DHT 22 (AM2302)
 
+// Update the credential from Relayr 
 //define your mqtt credentials
-#define DEVICE_ID "814ebb96-320d-4a93-93c1-6b21c9afe801"
+#define DEVICE_ID "814ebb96-320d-4a93-93c1-6b21c9afe801"  
 #define MQTT_USER "814ebb96-320d-4a93-93c1-6b21c9afe801"
 #define MQTT_PASSWORD "8htaGLrOHcvG"
 #define MQTT_CLIENTID "TgU67ljINSpOTwWshya/oAQ" //can be anything else
